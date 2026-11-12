@@ -1,0 +1,290 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-label: var(--chart-label);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-tooltip-background: var(--chart-tooltip-background);
+  --color-chart-tooltip-foreground: var(--chart-tooltip-foreground);
+  --color-chart-tooltip-muted: var(--chart-tooltip-muted);
+  --color-legend: var(--legend);
+  --color-legend-foreground: var(--legend-foreground);
+  --color-legend-muted: var(--legend-muted);
+  --color-legend-muted-foreground: var(--legend-muted-foreground);
+  --color-legend-track: var(--legend-track);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --radius-3xl: calc(var(--radius) + 16px);
+
+  --shadow-soft: 0 1px 2px 0 rgb(24 20 33 / 0.04), 0 8px 24px -18px rgb(24 20 33 / 0.22);
+  --shadow-lift: 0 1px 2px 0 rgb(24 20 33 / 0.05), 0 18px 40px -26px rgb(24 20 33 / 0.35);
+}
+
+:root {
+  --radius: 0.75rem;
+
+  --background: oklch(0.991 0.002 300);
+  --foreground: oklch(0.235 0.018 292);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.235 0.018 292);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.235 0.018 292);
+  --primary: oklch(0.526 0.224 291.5);
+  --primary-foreground: oklch(0.993 0.002 300);
+  --secondary: oklch(0.967 0.007 297);
+  --secondary-foreground: oklch(0.32 0.026 292);
+  --muted: oklch(0.966 0.005 297);
+  --muted-foreground: oklch(0.523 0.018 292);
+  --accent: oklch(0.957 0.021 294);
+  --accent-foreground: oklch(0.36 0.11 292);
+  --destructive: oklch(0.577 0.222 27.5);
+  --destructive-foreground: oklch(0.99 0.004 300);
+  --border: oklch(0.918 0.008 296);
+  --input: oklch(0.905 0.01 296);
+  --ring: oklch(0.6 0.19 292);
+  --sidebar: oklch(0.976 0.004 298);
+  --sidebar-foreground: oklch(0.32 0.02 292);
+  --sidebar-border: oklch(0.925 0.008 296);
+  --success: oklch(0.58 0.14 158);
+  --warning: oklch(0.71 0.15 75);
+  --info: oklch(0.58 0.15 250);
+
+  --chart-1: oklch(0.55 0.235 292);
+  --chart-2: oklch(0.66 0.15 254);
+  --chart-3: oklch(0.72 0.13 195);
+  --chart-4: oklch(0.77 0.15 80);
+  --chart-5: oklch(0.62 0.17 355);
+  --chart-positive: oklch(0.6 0.15 158);
+  --chart-negative: oklch(0.6 0.21 25);
+  --chart-background: oklch(1 0 0);
+  --chart-foreground: oklch(0.235 0.018 292);
+  --chart-foreground-muted: oklch(0.55 0.015 292);
+  --chart-line-primary: var(--chart-1);
+  --chart-line-secondary: var(--chart-2);
+  --chart-crosshair: oklch(0.55 0.14 292);
+  --chart-grid: oklch(0.929 0.008 296);
+  --chart-brush-border: var(--chart-grid);
+  --chart-tooltip-background: var(--popover);
+  --chart-tooltip-foreground: var(--popover-foreground);
+  --chart-tooltip-muted: var(--muted-foreground);
+  --chart-marker-background: oklch(0.98 0.004 297);
+  --chart-marker-border: oklch(0.89 0.012 296);
+  --chart-marker-foreground: oklch(0.35 0.02 292);
+  --chart-label: oklch(0.53 0.018 292);
+  --chart-scale-mix: oklch(1 0 0);
+  --chart-scale-01: oklch(0.93 0.02 295);
+  --chart-scale-02: color-mix(in oklab, var(--chart-1) 28%, var(--chart-scale-mix));
+  --chart-scale-03: color-mix(in oklab, var(--chart-1) 52%, var(--chart-scale-mix));
+  --chart-scale-04: color-mix(in oklab, var(--chart-1) 76%, var(--chart-scale-mix));
+  --chart-scale-05: var(--chart-1);
+  --chart-scale-pattern-color: oklch(1 0 0);
+  --chart-indicator-color: oklch(0.235 0.018 292);
+  --chart-indicator-secondary-color: oklch(0.93 0.01 296);
+  --chart-marker-badge-background: oklch(0.235 0.018 292);
+  --chart-marker-badge-foreground: oklch(0.96 0.004 297);
+  --chart-segment-background: oklch(0.75 0 0 / 0.06);
+  --chart-segment-line: oklch(0.5 0 0 / 0.22);
+  --legend: oklch(1 0 0);
+  --legend-foreground: oklch(0.25 0.018 292);
+  --legend-muted: oklch(0.965 0.005 297);
+  --legend-muted-foreground: oklch(0.54 0.018 292);
+  --legend-track: oklch(0.925 0.008 296);
+}
+
+.dark {
+  --background: oklch(0.178 0.014 292);
+  --foreground: oklch(0.955 0.006 297);
+  --card: oklch(0.212 0.016 292);
+  --card-foreground: oklch(0.955 0.006 297);
+  --popover: oklch(0.222 0.017 292);
+  --popover-foreground: oklch(0.955 0.006 297);
+  --primary: oklch(0.685 0.185 292);
+  --primary-foreground: oklch(0.16 0.02 292);
+  --secondary: oklch(0.262 0.02 292);
+  --secondary-foreground: oklch(0.94 0.008 297);
+  --muted: oklch(0.252 0.017 292);
+  --muted-foreground: oklch(0.7 0.016 294);
+  --accent: oklch(0.282 0.038 293);
+  --accent-foreground: oklch(0.93 0.03 295);
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.16 0.02 292);
+  --border: oklch(0.302 0.018 292);
+  --input: oklch(0.34 0.02 292);
+  --ring: oklch(0.66 0.17 292);
+  --sidebar: oklch(0.196 0.015 292);
+  --sidebar-foreground: oklch(0.87 0.012 296);
+  --sidebar-border: oklch(0.286 0.018 292);
+  --success: oklch(0.72 0.14 158);
+  --warning: oklch(0.79 0.14 78);
+  --info: oklch(0.7 0.13 250);
+
+  --chart-1: oklch(0.7 0.19 292);
+  --chart-2: oklch(0.73 0.13 254);
+  --chart-3: oklch(0.78 0.11 195);
+  --chart-4: oklch(0.82 0.13 80);
+  --chart-5: oklch(0.73 0.14 355);
+  --chart-positive: oklch(0.74 0.15 158);
+  --chart-negative: oklch(0.71 0.19 25);
+  --chart-background: oklch(0.212 0.016 292);
+  --chart-foreground: oklch(0.9 0.01 296);
+  --chart-foreground-muted: oklch(0.68 0.015 292);
+  --chart-crosshair: oklch(0.68 0.1 292);
+  --chart-grid: oklch(0.302 0.018 292);
+  --chart-brush-border: var(--chart-grid);
+  --chart-marker-background: oklch(0.28 0.02 292);
+  --chart-marker-border: oklch(0.4 0.025 292);
+  --chart-marker-foreground: oklch(0.9 0.01 296);
+  --chart-label: oklch(0.69 0.016 294);
+  --chart-scale-mix: oklch(0.212 0.016 292);
+  --chart-scale-01: oklch(0.31 0.025 292);
+  --chart-scale-02: color-mix(in oklab, var(--chart-1) 32%, var(--chart-scale-mix));
+  --chart-scale-03: color-mix(in oklab, var(--chart-1) 55%, var(--chart-scale-mix));
+  --chart-scale-04: color-mix(in oklab, var(--chart-1) 78%, var(--chart-scale-mix));
+  --chart-scale-05: var(--chart-1);
+  --chart-scale-pattern-color: oklch(0.178 0.014 292);
+  --chart-indicator-color: oklch(0.955 0.006 297);
+  --chart-indicator-secondary-color: oklch(0.24 0.02 292);
+  --chart-marker-badge-background: oklch(0.955 0.006 297);
+  --chart-marker-badge-foreground: oklch(0.18 0.02 292);
+  --chart-segment-background: oklch(0.41 0.013 292 / 0.25);
+  --chart-segment-line: oklch(1 0 0 / 0.22);
+  --legend: oklch(0.212 0.016 292);
+  --legend-foreground: oklch(0.955 0.006 297);
+  --legend-muted: oklch(0.27 0.02 292);
+  --legend-muted-foreground: oklch(0.7 0.016 294);
+  --legend-track: oklch(0.3 0.018 292);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/60;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv05" 1, "cv08" 1, "cv11" 1;
+    font-variation-settings: normal;
+    min-width: 320px;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4 {
+    font-feature-settings: "cv05" 1, "cv08" 1, "cv11" 1;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility surface {
+  @apply rounded-2xl border border-border/80 bg-card shadow-soft;
+}
+
+@utility hairline {
+  box-shadow: inset 0 1px 0 0 color-mix(in oklab, var(--foreground) 4%, transparent);
+}
+
+.app-canvas {
+  background-image:
+    radial-gradient(1200px 520px at 72% -12%, color-mix(in oklab, var(--primary) 7%, transparent), transparent 62%),
+    radial-gradient(760px 420px at 0% 8%, color-mix(in oklab, var(--chart-2) 5%, transparent), transparent 65%);
+}
+
+.dark .app-canvas {
+  background-image:
+    radial-gradient(1100px 500px at 75% -10%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 60%),
+    radial-gradient(720px 400px at 0% 6%, color-mix(in oklab, var(--chart-2) 7%, transparent), transparent 65%);
+}
+
+.bar-fill-ok {
+  background: linear-gradient(90deg, color-mix(in oklab, var(--chart-positive) 78%, transparent), var(--chart-positive));
+}
+.bar-fill-warn {
+  background: linear-gradient(90deg, color-mix(in oklab, var(--warning) 78%, transparent), var(--warning));
+}
+.bar-fill-over {
+  background: linear-gradient(90deg, color-mix(in oklab, var(--chart-negative) 74%, transparent), var(--chart-negative));
+}
+
+.dotted-rule {
+  background-image: linear-gradient(to right, var(--border) 45%, transparent 45%);
+  background-size: 7px 1px;
+  background-repeat: repeat-x;
+}
