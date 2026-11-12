@@ -39,7 +39,7 @@ export function BudgetRings({
         defaultLabel="Spent this month"
         prefix="RWF "
         formatOptions={{ notation: "compact", maximumFractionDigits: 1 }}
-        valueClassName="num text-[19px] font-semibold tracking-[-0.03em] text-foreground"
+        valueClassName="num text-[17px] font-semibold tracking-[-0.03em] text-foreground"
         labelClassName="mt-1 text-[9.5px] leading-tight text-muted-foreground"
       />
       <span className="sr-only">

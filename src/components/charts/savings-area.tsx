@@ -45,7 +45,7 @@ export function SavingsAreaChart({
         formatValue={(value) => formatCompactMoney(value).replace("RWF ", "")}
       />
       <ChartTooltip
-        showDatePill
+        showDatePill={false}
         indicatorColor="var(--chart-1)"
         rows={(point) => [
           {
