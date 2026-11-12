@@ -54,9 +54,9 @@ export function GoalDialog({
 
   useEffect(() => {
     if (!open) return
-    const openGoals = workspace.goals.filter((goal) => goal.saved < goal.target)
-    const preferred =
-      openGoals.find((goal) => goal.id === defaultGoalId) ?? openGoals[0] ?? workspace.goals[0]
+    const preferred = defaultGoalId
+      ? workspace.goals.find((goal) => goal.id === defaultGoalId && goal.saved < goal.target)
+      : undefined
     setStep(1)
     setGoalId(preferred?.id ?? "")
     setAmount("")
@@ -285,7 +285,11 @@ export function GoalDialog({
                   })}
                 </div>
 
-                {goal && remaining === 0 ? (
+                {!goal ? (
+                  <p className="rounded-lg bg-muted/50 px-3 py-2 text-[11px] text-muted-foreground">
+                    Pick a goal to continue.
+                  </p>
+                ) : goal && remaining === 0 ? (
                   <p className="rounded-lg bg-muted/50 px-3 py-2 text-[11px] text-muted-foreground">
                     This goal is already funded. Choose another one.
                   </p>
