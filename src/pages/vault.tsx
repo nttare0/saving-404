@@ -209,7 +209,7 @@ export function VaultPage() {
           >
             <SavingsAreaChart data={trend} seriesLabel="Vault balance" />
             <p className="mt-2 px-2 text-[10.5px] leading-relaxed text-muted-foreground">
-              Everything here is yours. No shared pots, no payouts to track.
+              Everything here is yours. Your vault is separate from everyday spending.
             </p>
           </Panel>
 

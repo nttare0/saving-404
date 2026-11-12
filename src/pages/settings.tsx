@@ -109,11 +109,9 @@ export function SettingsPage() {
   }
 
   function toggleNotification(id: (typeof notificationOptions)[number]["id"], checked: boolean) {
-    setNotifications((current) => {
-      const next = { ...current, [id]: checked }
-      saveNotificationPrefs(next)
-      return next
-    })
+    const next = { ...notifications, [id]: checked }
+    setNotifications(next)
+    saveNotificationPrefs(next)
     toast.success(checked ? "Reminder turned on" : "Reminder turned off")
   }
 

@@ -23,6 +23,7 @@ import {
 } from "@/lib/data"
 
 const STORAGE_KEY = "saving-404:workspace:v2"
+const LEGACY_STORAGE_KEY = "saving-404:workspace:v1"
 
 type NewContribution = {
   circleId: string
@@ -77,18 +78,46 @@ type WorkspaceContextValue = {
 
 const WorkspaceContext = createContext<WorkspaceContextValue | null>(null)
 
+function normalizeWorkspace(parsed: Workspace): Workspace {
+  const legacySavings = parsed.budget.categories.filter(
+    (category) => category.id === "circle-saving" || category.id === "personal-saving",
+  )
+  const categories = legacySavings.length
+    ? [
+        ...parsed.budget.categories.filter(
+          (category) => category.id !== "circle-saving" && category.id !== "personal-saving",
+        ),
+        {
+          id: "vault-saving",
+          name: "Vault deposits",
+          bucket: "savings" as const,
+          cap: legacySavings.reduce((total, category) => total + category.cap, 0),
+          spent: legacySavings.reduce((total, category) => total + category.spent, 0),
+          icon: "vault",
+        },
+      ]
+    : parsed.budget.categories
+
+  return {
+    ...parsed,
+    profile: {
+      ...parsed.profile,
+      role: parsed.profile.role === "Workspace owner" ? "Personal saver" : parsed.profile.role,
+    },
+    budget: { ...parsed.budget, categories },
+    vault: parsed.vault ?? seedWorkspace.vault,
+    vaultLog: parsed.vaultLog ?? seedWorkspace.vaultLog,
+  }
+}
+
 function loadWorkspace(): Workspace {
   if (typeof window === "undefined") return seedWorkspace
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY)
+    const stored = window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(LEGACY_STORAGE_KEY)
     if (!stored) return seedWorkspace
     const parsed = JSON.parse(stored) as Workspace
-    if (!parsed?.circles || !parsed?.budget) return seedWorkspace
-    return {
-      ...parsed,
-      vault: parsed.vault ?? seedWorkspace.vault,
-      vaultLog: parsed.vaultLog ?? seedWorkspace.vaultLog,
-    }
+    if (!parsed?.circles || !parsed?.budget?.categories) return seedWorkspace
+    return normalizeWorkspace(parsed)
   } catch {
     return seedWorkspace
   }

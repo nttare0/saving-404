@@ -127,7 +127,7 @@ export function GoalDialog({
 
             <div className="space-y-2">
               <Label className="text-[12px]">Save toward</Label>
-              <div className="space-y-1.5" role="radiogroup" aria-label="Savings goal">
+              <div className="space-y-1.5" role="group" aria-label="Savings goal">
                 {workspace.goals.map((item) => {
                   const Icon = iconMap[item.icon] ?? Target
                   const pct = (item.saved / Math.max(1, item.target)) * 100
@@ -137,8 +137,8 @@ export function GoalDialog({
                     <button
                       key={item.id}
                       type="button"
-                      role="radio"
-                      aria-checked={selected}
+                      aria-pressed={selected}
+                      aria-label={`Save toward ${item.name}`}
                       onClick={() => setGoalId(item.id)}
                       className={cn(
                         "flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",

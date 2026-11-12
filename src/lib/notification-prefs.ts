@@ -11,7 +11,7 @@ export const notificationOptions = [
   {
     id: "milestones",
     label: "Goal milestones",
-    description: "When a goal passes 50%, 75% or 100%.",
+    description: "When a goal gets close to its target.",
     default: true,
   },
   {
