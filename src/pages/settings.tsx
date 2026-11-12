@@ -167,11 +167,16 @@ export function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-3">
+              <div className="flex flex-col gap-2 border-t border-border/60 pt-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
                 <p className="text-[10.5px] leading-relaxed text-muted-foreground">
-                  Your name appears on your vault and budget summaries.
+                  Your name appears on your savings and budget summaries.
                 </p>
-                <Button type="submit" size="sm" className="h-8 rounded-lg" disabled={!dirty || name.trim().length < 2}>
+                <Button
+                  type="submit"
+                  size="sm"
+                  className="h-10 w-full rounded-lg sm:h-8 sm:w-auto"
+                  disabled={!dirty || name.trim().length < 2}
+                >
                   Save profile
                 </Button>
               </div>
@@ -183,15 +188,14 @@ export function SettingsPage() {
             description="Light, dark, or follow the device preference."
             action={<SectionLabel>{theme === "system" ? `System · ${resolvedTheme}` : theme}</SectionLabel>}
           >
-            <div className="grid gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Theme">
+            <div className="grid gap-2 sm:grid-cols-3" role="group" aria-label="Theme">
               {themeOptions.map((option) => {
                 const selected = theme === option.value
                 return (
                   <button
                     key={option.value}
                     type="button"
-                    role="radio"
-                    aria-checked={selected}
+                    aria-pressed={selected}
                     onClick={() => setTheme(option.value)}
                     className={cn(
                       "group rounded-xl border p-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
@@ -259,12 +263,12 @@ export function SettingsPage() {
                   <p className="text-[11.5px] font-medium">Saved records</p>
                   <p className="num mt-0.5 text-[10.5px] text-muted-foreground">
                     {workspace.goals.length} goals · {workspace.budget.categories.length} budget categories ·{" "}
-                    {workspace.vaultLog.length} vault entries
+                    {workspace.vaultLog.length} savings entries
                   </p>
                 </div>
               </div>
 
-              <Button variant="outline" className="h-9 w-full justify-start gap-2 rounded-lg" onClick={exportData}>
+              <Button variant="outline" className="h-11 w-full justify-start gap-2 rounded-lg sm:h-9" onClick={exportData}>
                 <Download className="size-4" /> Export workspace as JSON
               </Button>
 
@@ -272,7 +276,7 @@ export function SettingsPage() {
                 variant="ghost"
                 onClick={handleReset}
                 className={cn(
-                  "h-9 w-full justify-start gap-2 rounded-lg",
+                  "h-11 w-full justify-start gap-2 rounded-lg sm:h-9",
                   confirmReset
                     ? "bg-destructive/10 text-destructive hover:bg-destructive/15 hover:text-destructive"
                     : "text-muted-foreground",
@@ -296,7 +300,7 @@ export function SettingsPage() {
               shadcn/ui and Bklit charts.
             </p>
             <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2.5 text-[10px] text-muted-foreground">
-              <span>Version 0.2 · demo</span>
+              <span>Version 0.3 · demo</span>
               <span>Kigali, Rwanda</span>
             </div>
           </div>

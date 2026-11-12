@@ -2,8 +2,8 @@ import {
   HandCoins,
   LayoutDashboard,
   Settings2,
+  PiggyBank,
   UsersRound,
-  Vault,
   WalletCards,
   type LucideIcon,
 } from "lucide-react"
@@ -19,9 +19,9 @@ export type NavItem = {
 }
 
 const personalNav: NavItem[] = [
-  { label: "Overview", to: "/", icon: LayoutDashboard, end: true, description: "Your money at a glance" },
-  { label: "My vault", to: "/vault", icon: Vault, description: "Personal savings and goals" },
-  { label: "Budget", to: "/budget", icon: WalletCards, description: "Caps, rollovers and spending" },
+  { label: "Home", to: "/", icon: LayoutDashboard, end: true, description: "Your money at a glance" },
+  { label: "My savings", to: "/vault", icon: PiggyBank, description: "Personal savings and goals" },
+  { label: "Budget", to: "/budget", icon: WalletCards, description: "Limits, leftovers and spending" },
 ]
 
 const sharedNav: NavItem[] = [

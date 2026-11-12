@@ -46,7 +46,7 @@ export function NotificationsMenu() {
       items.push({
         id: "budget",
         icon: WalletCards,
-        title: `${capAlerts.length} ${capAlerts.length === 1 ? "category is" : "categories are"} near the cap`,
+        title: `${capAlerts.length} ${capAlerts.length === 1 ? "category is" : "categories are"} near the limit`,
         detail:
           budgets.overspent > 0
             ? `${formatMoney(budgets.overspent)} over budget in total`
@@ -70,7 +70,7 @@ export function NotificationsMenu() {
         id: "auto-save",
         icon: PiggyBank,
         title: "Auto-save is paused",
-        detail: "Turn it on to keep your vault growing",
+        detail: "Turn it on to keep your savings growing",
         href: "/vault",
         tone: "warning" as const,
       })

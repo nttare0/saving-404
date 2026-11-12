@@ -1,19 +1,21 @@
 # Saving 404
 
-A calm, desktop-first workspace for individual saving.
+A calm workspace for individual saving, designed to feel at home on a phone.
 
 Saving 404 brings personal savings goals, a monthly budget, and a deliberately simple
-"add money" flow into one understated interface. It is a front-end demo: every change is
+"save money" flow into one understated interface. It is a front-end demo: every change is
 kept in `localStorage` and can be reset from Settings.
 
 ## What is inside
 
-### My vault
+### My savings
 - Personal goals with targets and deadlines, each with its own progress and monthly pace.
-- One focused **Add money** dialog: enter an amount, pick a goal, see the result, confirm.
-- Quick amounts, a "finish goal" shortcut, and a preview of the goal after the deposit.
+- One focused **Save money** flow: pick an amount, choose a goal, see the result, confirm.
+- Quick amounts and a large keypad, so a deposit takes a few taps.
+- A clear preview of the goal after the deposit.
 - Monthly auto-save, round-ups, and a projected finish date.
 - A running log of every top-up, auto-save, and round-up.
+- Plain-language labels and generous touch targets throughout.
 
 ### Money entry
 - Amounts are formatted with thousands separators as you type.
@@ -22,16 +24,18 @@ kept in `localStorage` and can be reset from Settings.
 
 ### Budget
 - 50/30/20 and zero-based frameworks, switchable at any time.
-- Category caps with green → amber → red progress as spending approaches the limit.
-- Log an expense and preview exactly how it lands against the cap.
-- Rollover mode: unused caps either roll into next month or sweep into the vault.
+- Category limits with green → amber → red progress as spending approaches the limit.
+- A simple category editor with bucket choices, picture icons and a live "left this month" preview.
+- Add an expense and preview exactly how it lands against the limit.
+- Rollover mode: unused money either rolls into next month or sweeps into savings.
 - Income allocation, category creation/editing, and unallocated income tracking.
 
 ### Workspace
-- Overview with vault balance, this month's savings, goals, recent activity, and the
+- Home with savings balance, this month's savings, goals, recent activity, and the
   monthly plan.
 - Command-style search (`⌘K` / `Ctrl K`) for pages and goals.
-- Notifications for budget caps, goal milestones, and auto-save.
+- Mobile dialogs become bottom sheets with sticky actions, and touches clear the safe area.
+- Notifications for budget limits, goal milestones, and auto-save.
 - Light and dark themes that follow the system by default.
 - Export the full workspace as JSON, or reset back to the seeded demo.
 
@@ -47,7 +51,7 @@ focuses on individual saving.
 export const GROUP_SAVING_ENABLED = false
 ```
 
-With the flag off, group routes redirect to the overview and are absent from the
+With the flag off, group routes redirect to the home page and are absent from the
 navigation, search, notifications, and summary cards. Set it to `true` to bring the
 circles and loans screens back; their components and data are unchanged.
 
@@ -55,7 +59,7 @@ circles and loans screens back; their components and data are unchanged.
 
 The interface follows a restrained, spacious product language:
 
-- Slim fixed sidebar, compact top bar, centered content, and a scrollable nav row on small screens.
+- Slim fixed sidebar on desktop, compact top bar, and a thumb-friendly bottom bar with a centre Save button on phones.
 - Soft rounded cards, hairline borders, restrained shadows, and generous whitespace.
 - Neutral surfaces with a refined violet accent; muted foreground text.
 - Inter with a clear type hierarchy and compact Lucide line icons.
@@ -107,14 +111,14 @@ src/
     layout/      Sidebar, top bar, mobile nav, search, notifications, theme
     ui/          Vendored shadcn/ui primitives
   lib/           Seed data, formatting, analytics, feature flag, notification prefs
-  pages/         Overview, vault, budget, settings, 404 (plus hidden group pages)
+  pages/         Home, savings, budget, settings, 404 (plus hidden group pages)
   store/         Persisted workspace reducer and actions
 ```
 
 ## Demo data
 
 The seed workspace contains three personal goals, a fully allocated monthly budget, and a
-short vault activity history. Amounts are in Rwandan francs (RWF). Reset from
+short savings activity history. Amounts are in Rwandan francs (RWF). Reset from
 **Settings → Data & privacy**.
 
 All money is illustrative. Nothing is sent to a server.

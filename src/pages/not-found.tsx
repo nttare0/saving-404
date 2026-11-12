@@ -18,7 +18,7 @@ export function NotFoundPage() {
       </p>
       <Button asChild variant="outline" className="mt-5 h-9 gap-1.5 rounded-lg">
         <Link to="/">
-          <ArrowLeft className="size-4" /> Back to overview
+          <ArrowLeft className="size-4" /> Back to home
         </Link>
       </Button>
     </div>

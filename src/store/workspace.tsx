@@ -82,21 +82,25 @@ function normalizeWorkspace(parsed: Workspace): Workspace {
   const legacySavings = parsed.budget.categories.filter(
     (category) => category.id === "circle-saving" || category.id === "personal-saving",
   )
-  const categories = legacySavings.length
+  const categories = (legacySavings.length
     ? [
         ...parsed.budget.categories.filter(
           (category) => category.id !== "circle-saving" && category.id !== "personal-saving",
         ),
         {
           id: "vault-saving",
-          name: "Vault deposits",
+          name: "Savings deposits",
           bucket: "savings" as const,
           cap: legacySavings.reduce((total, category) => total + category.cap, 0),
           spent: legacySavings.reduce((total, category) => total + category.spent, 0),
-          icon: "vault",
+          icon: "piggy-bank",
         },
       ]
-    : parsed.budget.categories
+    : parsed.budget.categories).map((category) =>
+    category.id === "vault-saving" && category.name === "Vault deposits"
+      ? { ...category, name: "Savings deposits", icon: "piggy-bank" }
+      : category,
+  )
 
   return {
     ...parsed,

@@ -66,49 +66,49 @@ export function VaultPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Save individually"
-        title="Personal vault"
+        eyebrow="Personal savings"
+        title="My savings"
         description="Your own money, kept separate from everyday spending. Set goals, watch the balance grow, and keep a steady auto-save rhythm."
         actions={
-          <Button className="h-9 gap-1.5 rounded-lg" onClick={() => openGoal()}>
+          <Button className="h-10 gap-1.5 rounded-lg sm:h-9" onClick={() => openGoal()}>
             <Plus className="size-4" />
-            Add money
+            Save money
           </Button>
         }
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-primary/15 bg-[linear-gradient(150deg,color-mix(in_oklab,var(--primary)_8%,var(--card)),var(--card))] p-4 shadow-soft sm:p-5">
+      <div className="grid grid-cols-1 gap-2.5 min-[360px]:grid-cols-2 sm:gap-3 xl:grid-cols-4">
+        <div className="rounded-2xl border border-primary/15 bg-[linear-gradient(150deg,color-mix(in_oklab,var(--primary)_8%,var(--card)),var(--card))] p-3.5 shadow-soft sm:p-5">
           <div className="flex items-start justify-between">
-            <p className="text-[11px] font-medium text-muted-foreground">Vault balance</p>
+            <p className="text-[10.5px] font-medium text-muted-foreground sm:text-[11px]">Saved so far</p>
             <span className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <Vault className="size-4" />
             </span>
           </div>
-          <p className="num mt-2 text-[22px] font-semibold tracking-[-0.03em]">{formatMoney(personal)}</p>
-          <p className="mt-1 text-[10.5px] text-muted-foreground">Ready for anything you planned</p>
+          <p className="num mt-1.5 text-[17px] font-semibold tracking-[-0.03em] sm:mt-2 sm:text-[22px]">{formatMoney(personal)}</p>
+          <p className="mt-1 text-[9.5px] leading-relaxed text-muted-foreground sm:text-[10.5px]">Ready for anything you planned</p>
         </div>
-        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-soft sm:p-5">
-          <p className="text-[11px] font-medium text-muted-foreground">Total goal target</p>
-          <p className="num mt-2 text-[22px] font-semibold tracking-[-0.03em]">{formatMoney(targetTotal)}</p>
-          <div className="mt-2 flex items-center gap-2">
+        <div className="rounded-2xl border border-border/80 bg-card p-3.5 shadow-soft sm:p-5">
+          <p className="text-[10.5px] font-medium text-muted-foreground sm:text-[11px]">Total goal target</p>
+          <p className="num mt-1.5 text-[17px] font-semibold tracking-[-0.03em] sm:mt-2 sm:text-[22px]">{formatMoney(targetTotal)}</p>
+          <div className="mt-1.5 flex items-center gap-2 sm:mt-2">
             <ProgressBar value={overall} className="h-1" label="All goals progress" />
             <span className="num shrink-0 text-[10px] text-muted-foreground">{Math.round(overall)}%</span>
           </div>
         </div>
-        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-soft sm:p-5">
-          <p className="text-[11px] font-medium text-muted-foreground">Still to save</p>
-          <p className="num mt-2 text-[22px] font-semibold tracking-[-0.03em]">{formatMoney(remaining)}</p>
-          <p className="mt-1 text-[10.5px] text-muted-foreground">
+        <div className="rounded-2xl border border-border/80 bg-card p-3.5 shadow-soft sm:p-5">
+          <p className="text-[10.5px] font-medium text-muted-foreground sm:text-[11px]">Still to save</p>
+          <p className="num mt-1.5 text-[17px] font-semibold tracking-[-0.03em] sm:mt-2 sm:text-[22px]">{formatMoney(remaining)}</p>
+          <p className="mt-1 text-[9.5px] leading-relaxed text-muted-foreground sm:text-[10.5px]">
             Across {workspace.goals.length - completed} open goals
           </p>
         </div>
-        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-soft sm:p-5">
-          <p className="text-[11px] font-medium text-muted-foreground">Monthly auto-save</p>
-          <p className="num mt-2 text-[22px] font-semibold tracking-[-0.03em]">
+        <div className="rounded-2xl border border-border/80 bg-card p-3.5 shadow-soft sm:p-5">
+          <p className="text-[10.5px] font-medium text-muted-foreground sm:text-[11px]">Monthly auto-save</p>
+          <p className="num mt-1.5 text-[17px] font-semibold tracking-[-0.03em] sm:mt-2 sm:text-[22px]">
             {formatMoney(workspace.vault.monthlyAmount)}
           </p>
-          <div className="mt-1 flex items-center gap-1.5 text-[10.5px] text-muted-foreground">
+          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[9.5px] text-muted-foreground sm:text-[10.5px]">
             <StatusBadge tone={workspace.vault.autoSave ? "positive" : "neutral"} className="px-1.5 py-0 text-[9.5px]">
               {workspace.vault.autoSave ? "On" : "Paused"}
             </StatusBadge>
@@ -183,13 +183,13 @@ export function VaultPage() {
                           {days >= 0 ? ` · ${days} days left` : " · past due"}
                         </p>
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
-                          className="h-8 gap-1 rounded-lg px-2 text-[10.5px] text-primary hover:bg-primary/10 hover:text-primary"
+                          className="h-9 gap-1 rounded-lg px-3 text-[11px] text-primary hover:border-primary/25 hover:bg-primary/[0.04] hover:text-primary"
                           onClick={() => openGoal(goal.id)}
                           disabled={done}
                         >
-                          <Plus className="size-3" /> Add money
+                          <Plus className="size-3" /> Save
                         </Button>
                       </div>
                     </div>
@@ -202,14 +202,14 @@ export function VaultPage() {
 
         <div className="space-y-4">
           <Panel
-            title="Vault growth"
+            title="Savings growth"
             description="Your individual savings over the last year."
             action={<SectionLabel>12 months</SectionLabel>}
             bodyClassName="px-2 pb-3 pt-4 sm:px-3"
           >
-            <SavingsAreaChart data={trend} seriesLabel="Vault balance" />
+            <SavingsAreaChart data={trend} seriesLabel="My savings" />
             <p className="mt-2 px-2 text-[10.5px] leading-relaxed text-muted-foreground">
-              Everything here is yours. Your vault is separate from everyday spending.
+              Everything here is yours. Your savings are separate from everyday spending.
             </p>
           </Panel>
 
@@ -220,7 +220,7 @@ export function VaultPage() {
                   Save every month
                 </Label>
                 <p className="mt-0.5 text-[10.5px] leading-relaxed text-muted-foreground">
-                  Moves money into the vault on the 2nd.
+                  Moves money into savings on the 2nd.
                 </p>
               </div>
               <Switch
@@ -268,7 +268,7 @@ export function VaultPage() {
                   Round up spending
                 </Label>
                 <p className="mt-0.5 text-[10.5px] text-muted-foreground">
-                  Sweep small change into the vault.
+                  Sweep small change into savings.
                 </p>
               </div>
               <Switch
@@ -297,7 +297,7 @@ export function VaultPage() {
       <div className="flex items-start gap-2.5 rounded-xl border border-border/70 bg-card/60 px-3.5 py-3 text-[11.5px] leading-relaxed text-muted-foreground">
         <Target className="mt-0.5 size-4 shrink-0 text-primary" />
         <p>
-          Everything in this vault belongs to you. It is never pooled, lent or paid out to anyone else.
+          Everything in your savings belongs to you. It is never pooled, lent or paid out to anyone else.
         </p>
       </div>
 

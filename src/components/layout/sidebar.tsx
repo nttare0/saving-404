@@ -120,7 +120,7 @@ export function Sidebar() {
           </span>
         </NavLink>
         <p className="px-2 pt-2 text-[9.5px] uppercase tracking-[0.14em] text-muted-foreground/60">
-          {formatMoney(vault.saved)} in your vault
+          {formatMoney(vault.saved)} saved
         </p>
       </div>
     </aside>

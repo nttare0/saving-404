@@ -9,6 +9,7 @@ export function AppToaster() {
       position="bottom-right"
       closeButton
       offset={20}
+      mobileOffset={{ bottom: 100, left: 16, right: 16 }}
       gap={10}
       toastOptions={{
         classNames: {

@@ -24,10 +24,10 @@ export function AppShell() {
       <div className="flex min-h-dvh flex-col lg:pl-[244px]">
         <Topbar />
         <MobileNav />
-        <main id="main-content" className="mx-auto w-full max-w-[1160px] flex-1 px-4 pb-16 pt-6 sm:px-6 lg:px-10 lg:pb-20 lg:pt-9">
+        <main id="main-content" className="mx-auto w-full max-w-[1160px] flex-1 px-4 pb-10 pt-5 sm:px-6 sm:pt-6 lg:px-10 lg:pb-20 lg:pt-9">
           <Outlet />
         </main>
-        <footer className="mx-auto w-full max-w-[1160px] px-4 pb-8 sm:px-6 lg:px-10">
+        <footer className="mx-auto w-full max-w-[1160px] px-4 pb-28 sm:px-6 lg:px-10 lg:pb-8">
           <div className="flex flex-col gap-2 border-t border-border/60 pt-4 text-[11px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p>Saving 404 — steady saving, without the noise.</p>
             <p className="num">Kigali · RWF</p>

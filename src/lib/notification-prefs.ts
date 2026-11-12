@@ -17,7 +17,7 @@ export const notificationOptions = [
   {
     id: "budget",
     label: "Budget check-ins",
-    description: "When a category gets close to its cap.",
+    description: "When a category gets close to its limit.",
     default: true,
   },
   {

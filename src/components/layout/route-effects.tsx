@@ -9,9 +9,7 @@ export function RouteEffects() {
     const nav = allNav.find(
       (item) => (item.end ? pathname === item.to : pathname.startsWith(item.to) && item.to !== "/"),
     )
-    const title = pathname === "/" ? "Overview" : nav?.label ?? "Page not found"
-
-    document.title = `${title} · Saving 404`
+    document.title = `${nav?.label ?? "Page not found"} · Saving 404`
   }, [pathname])
 
   return null

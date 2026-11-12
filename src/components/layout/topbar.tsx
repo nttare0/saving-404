@@ -34,7 +34,7 @@ export function Topbar() {
           <span className="text-muted-foreground">Saving</span>
           <ChevronRight className="size-3.5 text-muted-foreground/50" />
           <span className="truncate font-medium text-foreground">
-            {location.pathname === "/" ? "Overview" : activeNav?.label ?? "Page not found"}
+            {activeNav?.label ?? "Page not found"}
           </span>
         </div>
 
@@ -65,11 +65,11 @@ export function Topbar() {
 
           <Button
             onClick={() => setAddMoneyOpen(true)}
-            className="ml-0.5 h-9 rounded-lg px-2.5 shadow-[0_6px_18px_-12px_var(--primary)] sm:px-3.5"
-            aria-label="Add money"
+            className="ml-0.5 hidden h-9 rounded-lg px-3.5 shadow-[0_6px_18px_-12px_var(--primary)] lg:inline-flex"
+            aria-label="Save money"
           >
             <Plus className="size-4" />
-            <span className="hidden sm:inline">Add money</span>
+            Save money
           </Button>
 
           <Link

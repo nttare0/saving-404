@@ -1,27 +1,6 @@
 import { useMemo, useState } from "react"
 import { toast } from "sonner"
-import {
-  Bus,
-  Home,
-  Laptop,
-  Pencil,
-  PiggyBank,
-  Plane,
-  Plus,
-  ReceiptText,
-  RotateCcw,
-  Shield,
-  Shirt,
-  ShoppingBasket,
-  Smartphone,
-  Sparkles,
-  Users,
-  Utensils,
-  Vault,
-  Wallet,
-  Zap,
-  type LucideIcon,
-} from "lucide-react"
+import { Pencil, PiggyBank, Plus, ReceiptText, RotateCcw, Wallet } from "lucide-react"
 import { PageHeader } from "@/components/common/page-header"
 import { Panel, SectionLabel } from "@/components/common/panel"
 import { ProgressBar } from "@/components/common/progress-bar"
@@ -39,26 +18,11 @@ import {
   bucketTotals,
   usageTone,
 } from "@/lib/analytics"
-import { formatCompactMoney, formatDate, formatMoney, formatPercent } from "@/lib/format"
+import { formatDate, formatMoney, formatPercent } from "@/lib/format"
+import { categoryIcons } from "@/lib/category-icons"
 import type { BudgetCategory, Bucket } from "@/lib/data"
 import { cn } from "@/lib/utils"
 
-const iconMap: Record<string, LucideIcon> = {
-  home: Home,
-  "shopping-basket": ShoppingBasket,
-  bus: Bus,
-  zap: Zap,
-  utensils: Utensils,
-  shirt: Shirt,
-  sparkles: Sparkles,
-  smartphone: Smartphone,
-  users: Users,
-  vault: Vault,
-  shield: Shield,
-  wallet: Wallet,
-  laptop: Laptop,
-  plane: Plane,
-}
 
 const bucketMeta: Record<Bucket, { label: string; description: string; color: string }> = {
   needs: { label: "Needs", description: "Essentials that keep life running", color: "bg-chart-1" },
@@ -105,11 +69,11 @@ export function BudgetPage() {
     setFramework(next)
     if (next === "50/30/20") {
       toast.success("Switched to 50/30/20", {
-        description: "Category caps were rebalanced to fit 50% needs, 30% wants and 20% savings.",
+        description: "Category limits were rebalanced to fit 50% needs, 30% wants and 20% savings.",
       })
     } else {
       toast.success("Switched to zero-based budgeting", {
-        description: "Every shilling gets a job. Adjust caps until the plan balances.",
+        description: "Every franc gets a job. Adjust limits until the plan balances.",
       })
     }
   }
@@ -125,8 +89,8 @@ export function BudgetPage() {
     toast.success(mode === "rollover" ? "Rollover turned on" : "Sweep to savings turned on", {
       description:
         mode === "rollover"
-          ? `${formatMoney(totals.unused)} of unused caps will move into next month.`
-          : `${formatMoney(totals.unused)} of unused caps will move into savings.`,
+          ? `${formatMoney(totals.unused)} of money left will move into next month.`
+          : `${formatMoney(totals.unused)} of money left will move into savings.`,
     })
   }
 
@@ -137,31 +101,31 @@ export function BudgetPage() {
       <PageHeader
         eyebrow={`${formatDate(new Date(), "long")} · ${budget.framework}`}
         title="Budget"
-        description="Give every shilling a job, cap the categories that slip, and decide where leftovers go."
+        description="Plan what you can spend, put a limit on each category, and keep a little for later."
         actions={
           <>
-            <Button variant="outline" className="h-9 gap-1.5 rounded-lg" onClick={() => openCreate("needs")}>
+            <Button variant="outline" className="h-10 gap-1.5 rounded-lg sm:h-9" onClick={() => openCreate("needs")}>
               <Plus className="size-4" />
               Add category
             </Button>
-            <Button className="h-9 gap-1.5 rounded-lg" onClick={() => setExpenseOpen(true)}>
+            <Button className="h-10 gap-1.5 rounded-lg sm:h-9" onClick={() => setExpenseOpen(true)}>
               <ReceiptText className="size-4" />
-              Log expense
+              Add expense
             </Button>
           </>
         }
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-primary/15 bg-[linear-gradient(150deg,color-mix(in_oklab,var(--primary)_8%,var(--card)),var(--card))] p-4 shadow-soft">
-          <p className="text-[11px] font-medium text-muted-foreground">Monthly income</p>
-          <p className="num mt-2 text-[22px] font-semibold tracking-[-0.03em]">{formatMoney(budget.monthlyIncome)}</p>
+      <div className="grid grid-cols-1 gap-2.5 min-[360px]:grid-cols-2 sm:gap-3 xl:grid-cols-4">
+        <div className="rounded-2xl border border-primary/15 bg-[linear-gradient(150deg,color-mix(in_oklab,var(--primary)_8%,var(--card)),var(--card))] p-3.5 shadow-soft sm:p-5">
+          <p className="text-[10.5px] font-medium text-muted-foreground sm:text-[11px]">Monthly income</p>
+          <p className="num mt-1.5 text-[17px] font-semibold tracking-[-0.03em] sm:mt-2 sm:text-[22px]">{formatMoney(budget.monthlyIncome)}</p>
           <p className="mt-1 text-[10.5px] text-muted-foreground">{formatDate(new Date(), "month")} plan</p>
         </div>
-        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-soft">
-          <p className="text-[11px] font-medium text-muted-foreground">Spent so far</p>
-          <p className="num mt-2 text-[22px] font-semibold tracking-[-0.03em]">{formatMoney(totals.spent)}</p>
-          <div className="mt-1 flex items-center gap-1.5 text-[10.5px] text-muted-foreground">
+        <div className="rounded-2xl border border-border/80 bg-card p-3.5 shadow-soft sm:p-5">
+          <p className="text-[10.5px] font-medium text-muted-foreground sm:text-[11px]">Spent so far</p>
+          <p className="num mt-1.5 text-[17px] font-semibold tracking-[-0.03em] sm:mt-2 sm:text-[22px]">{formatMoney(totals.spent)}</p>
+          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[9.5px] text-muted-foreground sm:text-[10.5px]">
             <span>{formatPercent(spentPct)} of income</span>
             {totals.overspent > 0 ? (
               <StatusBadge tone="danger" className="px-1.5 py-0 text-[9.5px]">
@@ -170,17 +134,17 @@ export function BudgetPage() {
             ) : null}
           </div>
         </div>
-        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-soft">
-          <p className="text-[11px] font-medium text-muted-foreground">Remaining</p>
-          <p className="num mt-2 text-[22px] font-semibold tracking-[-0.03em]">{formatMoney(totals.remaining)}</p>
+        <div className="rounded-2xl border border-border/80 bg-card p-3.5 shadow-soft sm:p-5">
+          <p className="text-[10.5px] font-medium text-muted-foreground sm:text-[11px]">Remaining</p>
+          <p className="num mt-1.5 text-[17px] font-semibold tracking-[-0.03em] sm:mt-2 sm:text-[22px]">{formatMoney(totals.remaining)}</p>
           <p className="num mt-1 text-[10.5px] text-muted-foreground">
             ≈ {formatMoney(safeDaily)} / day for {daysLeft} days
           </p>
         </div>
-        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-soft">
-          <p className="text-[11px] font-medium text-muted-foreground">Unused caps</p>
-          <p className="num mt-2 text-[22px] font-semibold tracking-[-0.03em]">{formatMoney(totals.unused)}</p>
-          <p className="mt-1 text-[10.5px] text-muted-foreground">
+        <div className="rounded-2xl border border-border/80 bg-card p-3.5 shadow-soft sm:p-5">
+          <p className="text-[10.5px] font-medium text-muted-foreground sm:text-[11px]">Money left</p>
+          <p className="num mt-1.5 text-[17px] font-semibold tracking-[-0.03em] sm:mt-2 sm:text-[22px]">{formatMoney(totals.unused)}</p>
+          <p className="mt-1 text-[9.5px] leading-relaxed text-muted-foreground sm:text-[10.5px]">
             {budget.rolloverMode === "rollover" ? "Rolls into next month" : "Sweeps into savings"}
           </p>
         </div>
@@ -191,17 +155,16 @@ export function BudgetPage() {
           <div>
             <h2 className="text-[14px] font-semibold tracking-[-0.01em]">Budgeting framework</h2>
             <p className="mt-0.5 text-[11.5px] text-muted-foreground">
-              Choose the rule that shapes your caps. Switch any time — the categories stay.
+              Pick how to split your money. You can change this later.
             </p>
           </div>
-          <div className="flex items-center gap-2" role="radiogroup" aria-label="Budgeting framework">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center" role="group" aria-label="Budgeting framework">
             <button
               type="button"
-              role="radio"
-              aria-checked={budget.framework === "50/30/20"}
+              aria-pressed={budget.framework === "50/30/20"}
               onClick={() => handleFramework("50/30/20")}
               className={cn(
-                "flex-1 rounded-xl border px-3.5 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 sm:w-[220px]",
+                "w-full rounded-xl border px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 sm:w-[220px] sm:px-3.5",
                 budget.framework === "50/30/20"
                   ? "border-primary/30 bg-primary/[0.05]"
                   : "border-border/70 hover:border-border",
@@ -219,16 +182,15 @@ export function BudgetPage() {
                 </span>
               </span>
               <span className="mt-0.5 block text-[10.5px] leading-snug text-muted-foreground">
-                50% needs, 30% wants, 20% savings.
+                Half for needs, a little for fun, some for later.
               </span>
             </button>
             <button
               type="button"
-              role="radio"
-              aria-checked={budget.framework === "zero-based"}
+              aria-pressed={budget.framework === "zero-based"}
               onClick={() => handleFramework("zero-based")}
               className={cn(
-                "flex-1 rounded-xl border px-3.5 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 sm:w-[220px]",
+                "w-full rounded-xl border px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 sm:w-[220px] sm:px-3.5",
                 budget.framework === "zero-based"
                   ? "border-primary/30 bg-primary/[0.05]"
                   : "border-border/70 hover:border-border",
@@ -246,7 +208,7 @@ export function BudgetPage() {
                 </span>
               </span>
               <span className="mt-0.5 block text-[10.5px] leading-snug text-muted-foreground">
-                Every shilling is assigned to a job.
+                Every franc gets a job.
               </span>
             </button>
           </div>
@@ -269,7 +231,7 @@ export function BudgetPage() {
                 ? `${formatMoney(unallocated)} unallocated`
                 : `${formatMoney(Math.abs(unallocated))} over income`}
           </span>
-          <span className="ml-auto">Caps reset on the 1st</span>
+          <span className="ml-auto">Limits reset on the 1st</span>
         </div>
       </section>
 
@@ -283,7 +245,7 @@ export function BudgetPage() {
             const target = targets[bucket]
             return (
               <section key={bucket} className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-soft">
-                <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border/60 px-4 py-3.5 sm:px-5">
+                <div className="flex flex-col gap-2 border-b border-border/60 px-4 py-3.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3 sm:px-5">
                   <div className="flex items-start gap-2.5">
                     <span className={cn("mt-1 size-2 shrink-0 rounded-full", bucketMeta[bucket].color)} />
                     <div>
@@ -296,9 +258,9 @@ export function BudgetPage() {
                       <p className="text-[10.5px] text-muted-foreground">{bucketMeta[bucket].description}</p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="sm:text-right">
                     <p className="num text-[11.5px] font-medium">
-                      {formatMoney(bucketSpent)} <span className="font-normal text-muted-foreground">/ {formatMoney(bucketCap)}</span>
+                      {formatMoney(bucketSpent)} <span className="font-normal text-muted-foreground">of {formatMoney(bucketCap)}</span>
                     </p>
                     <p className="num text-[9.5px] text-muted-foreground">
                       {formatMoney(target)} target at {budget.framework === "50/30/20" ? (bucket === "needs" ? "50%" : bucket === "wants" ? "30%" : "20%") : "your plan"}
@@ -310,12 +272,12 @@ export function BudgetPage() {
                   {categories.map((category) => {
                     const pct = (category.spent / Math.max(1, category.cap)) * 100
                     const tone = usageTone(pct)
-                    const Icon = iconMap[category.icon] ?? Wallet
+                    const Icon = categoryIcons[category.icon] ?? Wallet
                     return (
-                      <div key={category.id} className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/25 sm:px-5">
+                      <div key={category.id} className="group flex items-start gap-2.5 px-3.5 py-3 transition-colors hover:bg-muted/25 sm:items-center sm:gap-3 sm:px-5">
                         <span
                           className={cn(
-                            "flex size-8 shrink-0 items-center justify-center rounded-lg border",
+                            "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border sm:mt-0",
                             tone === "over"
                               ? "border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-300"
                               : tone === "warn"
@@ -326,14 +288,11 @@ export function BudgetPage() {
                           <Icon className="size-3.5" strokeWidth={1.9} />
                         </span>
                         <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
+                          <div className="flex flex-col gap-0.5 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-x-2">
                             <p className="truncate text-[12.5px] font-medium">{category.name}</p>
-                            <p className="num shrink-0 text-[11px]">
-                              {formatMoney(category.spent)}{" "}
-                              <span className="hidden text-muted-foreground sm:inline">/ {formatMoney(category.cap)}</span>
-                              <span className="text-muted-foreground sm:hidden">
-                                / {formatCompactMoney(category.cap).replace("RWF ", "")}
-                              </span>
+                            <p className="num text-[10.5px] text-muted-foreground sm:shrink-0 sm:text-[11px]">
+                              <span className="font-medium text-foreground">{formatMoney(category.spent)}</span> of{" "}
+                              {formatMoney(category.cap)}
                             </p>
                           </div>
                           <div className="mt-1.5 flex items-center gap-2">
@@ -341,7 +300,7 @@ export function BudgetPage() {
                               value={pct}
                               tone={tone}
                               className="h-1.5"
-                              label={`${category.name} spending cap`}
+                              label={`${category.name} spending limit`}
                             />
                             <span
                               className={cn(
@@ -356,18 +315,27 @@ export function BudgetPage() {
                               {Math.round(pct)}%
                             </span>
                           </div>
-                          {category.spent > category.cap ? (
-                            <p className="mt-1 text-[9.5px] text-rose-600 dark:text-rose-300">
-                              {formatMoney(category.spent - category.cap)} over this cap
-                            </p>
-                          ) : category.spent === category.cap ? (
-                            <p className="mt-1 text-[9.5px] text-muted-foreground">Cap fully used</p>
-                          ) : null}
+                          <p
+                            className={cn(
+                              "mt-1 text-[9.5px]",
+                              category.spent > category.cap
+                                ? "text-rose-600 dark:text-rose-300"
+                                : category.spent === category.cap
+                                  ? "text-muted-foreground"
+                                  : "text-muted-foreground",
+                            )}
+                          >
+                            {category.spent > category.cap
+                              ? `${formatMoney(category.spent - category.cap)} over the limit`
+                              : category.spent === category.cap
+                                ? "Limit reached"
+                                : `${formatMoney(category.cap - category.spent)} left this month`}
+                          </p>
                         </div>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="size-8 shrink-0 rounded-lg text-muted-foreground opacity-70 transition-opacity hover:text-foreground sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+                          className="size-9 shrink-0 self-start rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:self-center lg:size-8 lg:opacity-0 lg:group-hover:opacity-100 lg:focus-visible:opacity-100"
                           onClick={() => openEdit(category)}
                           aria-label={`Edit ${category.name}`}
                         >
@@ -386,7 +354,7 @@ export function BudgetPage() {
                 <button
                   type="button"
                   onClick={() => openCreate(bucket)}
-                  className="flex w-full items-center gap-1.5 border-t border-border/60 px-4 py-2.5 text-left text-[10.5px] font-medium text-muted-foreground transition-colors hover:bg-muted/30 hover:text-primary sm:px-5"
+                  className="flex w-full items-center gap-1.5 border-t border-border/60 px-4 py-3 text-left text-[11px] font-medium text-muted-foreground transition-colors hover:bg-muted/30 hover:text-primary sm:px-5"
                 >
                   <Plus className="size-3" /> Add a {bucketMeta[bucket].label.toLowerCase()} category
                 </button>
@@ -398,7 +366,7 @@ export function BudgetPage() {
         <div className="space-y-4">
           <Panel
             title="Where it goes"
-            description="Spending against each bucket's cap."
+            description="Spending against each group's limit."
             action={<SectionLabel>This month</SectionLabel>}
           >
             <div className="flex justify-center py-1">
@@ -411,19 +379,18 @@ export function BudgetPage() {
                   <span className="capitalize text-muted-foreground">{bucketMeta[bucket].label}</span>
                   <span className="num ml-auto">
                     {formatMoney(buckets[bucket].spent)}{" "}
-                    <span className="text-muted-foreground">/ {formatMoney(buckets[bucket].cap)}</span>
+                    <span className="text-muted-foreground">of {formatMoney(buckets[bucket].cap)}</span>
                   </span>
                 </div>
               ))}
             </div>
           </Panel>
 
-          <Panel title="Leftovers" description="Decide what happens to unused caps at month end.">
-            <div className="space-y-2" role="radiogroup" aria-label="Rollover behavior">
+          <Panel title="Leftovers" description="Decide what happens to money left at month end.">
+            <div className="space-y-2" role="group" aria-label="Rollover behavior">
               <button
                 type="button"
-                role="radio"
-                aria-checked={budget.rolloverMode === "rollover"}
+                aria-pressed={budget.rolloverMode === "rollover"}
                 onClick={() => setMode("rollover")}
                 className={cn(
                   "flex w-full items-start gap-2.5 rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
@@ -438,14 +405,13 @@ export function BudgetPage() {
                 <span>
                   <span className="block text-[12px] font-medium">Roll into next month</span>
                   <span className="mt-0.5 block text-[10.5px] leading-relaxed text-muted-foreground">
-                    Unused caps top up the same categories next cycle.
+                    Money left tops up the same categories next month.
                   </span>
                 </span>
               </button>
               <button
                 type="button"
-                role="radio"
-                aria-checked={budget.rolloverMode === "sweep"}
+                aria-pressed={budget.rolloverMode === "sweep"}
                 onClick={() => setMode("sweep")}
                 className={cn(
                   "flex w-full items-start gap-2.5 rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
@@ -460,7 +426,7 @@ export function BudgetPage() {
                 <span>
                   <span className="block text-[12px] font-medium">Sweep into savings</span>
                   <span className="mt-0.5 block text-[10.5px] leading-relaxed text-muted-foreground">
-                    Leftover money moves straight to your personal vault.
+                    Leftover money moves straight into your savings.
                   </span>
                 </span>
               </button>
@@ -484,7 +450,7 @@ export function BudgetPage() {
                     checked ? "Leftovers will apply automatically" : "Leftovers will wait for you",
                     {
                       description: checked
-                        ? "At the end of the month, unused caps follow the rule you picked."
+                        ? "At the end of the month, money left follows the rule you picked."
                         : "You can apply leftovers yourself when the month closes.",
                     },
                   )
@@ -541,11 +507,11 @@ export function BudgetPage() {
           <p className="mt-0.5 text-[10.5px] text-muted-foreground">Safe to spend per day for the rest of the month.</p>
         </div>
         <div>
-          <p className="text-[11px] font-medium">Caps close to the line</p>
+          <p className="text-[11px] font-medium">Categories near the limit</p>
           <p className="num mt-1 text-[16px] font-semibold">
             {budget.categories.filter((category) => usageTone((category.spent / Math.max(1, category.cap)) * 100) !== "ok").length}
           </p>
-          <p className="mt-0.5 text-[10.5px] text-muted-foreground">Categories at 78% or more of their cap.</p>
+          <p className="mt-0.5 text-[10.5px] text-muted-foreground">Categories at 78% or more of their limit.</p>
         </div>
         <div>
           <p className="text-[11px] font-medium">Overspending</p>

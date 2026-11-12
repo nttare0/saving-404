@@ -428,7 +428,7 @@ const budget: BudgetState = {
     { id: "shopping", name: "Shopping", bucket: "wants", cap: 160_000, spent: 139_000, icon: "shirt" },
     { id: "entertainment", name: "Entertainment", bucket: "wants", cap: 100_000, spent: 41_000, icon: "sparkles" },
     { id: "misc", name: "Data & misc", bucket: "wants", cap: 150_000, spent: 96_000, icon: "smartphone" },
-    { id: "vault-saving", name: "Vault deposits", bucket: "savings", cap: 280_000, spent: 280_000, icon: "vault" },
+    { id: "vault-saving", name: "Savings deposits", bucket: "savings", cap: 280_000, spent: 280_000, icon: "piggy-bank" },
     { id: "emergency", name: "Emergency fund", bucket: "savings", cap: 50_000, spent: 30_000, icon: "shield" },
   ],
 }

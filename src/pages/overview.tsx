@@ -90,17 +90,17 @@ export function OverviewPage() {
         title={`${greeting()}, ${workspace.profile.firstName}`}
         description="A calm view of your savings, your goals and this month's plan."
         actions={
-          <Button className="h-9 gap-1.5 rounded-lg" onClick={() => openAdd()}>
+          <Button className="h-10 gap-1.5 rounded-lg sm:h-9" onClick={() => openAdd()}>
             <Plus className="size-4" />
-            Add money
+            Save money
           </Button>
         }
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-2.5 min-[360px]:grid-cols-2 sm:gap-3 xl:grid-cols-4">
         <StatCard
           accent
-          label="Vault balance"
+          label="My savings"
           value={formatMoney(vault.saved)}
           icon={Vault}
           delta={monthGrowth > 0 ? `+${formatPercent(monthGrowth, 1)}` : undefined}
@@ -135,7 +135,7 @@ export function OverviewPage() {
       <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
         <Panel
           title="Your savings"
-          description="Money in your personal vault, month by month."
+          description="Money in your personal savings, month by month."
           action={
             <div className="flex rounded-lg border border-border/70 bg-muted/40 p-0.5" role="group" aria-label="Chart range">
               {(["6m", "12m"] as Range[]).map((option) => (
@@ -170,7 +170,7 @@ export function OverviewPage() {
               Last month <span className="font-medium text-foreground">{formatMoney(lastMonth)}</span>
             </span>
             <Link to="/vault" className="ml-auto inline-flex items-center gap-1 font-medium text-primary hover:underline">
-              Open my vault <ArrowRight className="size-3" />
+              Open my savings <ArrowRight className="size-3" />
             </Link>
           </div>
         </Panel>
@@ -238,8 +238,8 @@ export function OverviewPage() {
           <div className="mt-4 flex items-start gap-2 rounded-lg bg-primary/[0.05] px-3 py-2.5 text-[11px] leading-relaxed text-muted-foreground">
             <CalendarDays className="mt-0.5 size-3.5 shrink-0 text-primary" />
             {workspace.budget.rolloverMode === "rollover"
-              ? `${formatMoney(budget.unused)} of unused caps rolls into next month.`
-              : `${formatMoney(budget.unused)} of unused caps sweeps into your vault.`}
+              ? `${formatMoney(budget.unused)} of money left rolls into next month.`
+              : `${formatMoney(budget.unused)} of money left sweeps into your savings.`}
           </div>
         </Panel>
       </div>
@@ -250,7 +250,7 @@ export function OverviewPage() {
           description="Give every goal its own finish line."
           action={
             <Link to="/vault" className="inline-flex items-center gap-1 text-[11.5px] font-medium text-primary hover:underline">
-              My vault <ArrowRight className="size-3" />
+              My savings <ArrowRight className="size-3" />
             </Link>
           }
           bodyClassName="p-2 sm:p-2.5"
@@ -261,7 +261,14 @@ export function OverviewPage() {
               const pct = (goal.saved / Math.max(1, goal.target)) * 100
               const done = goal.saved >= goal.target
               return (
-                <div key={goal.id} className="flex items-center gap-3 px-2.5 py-3">
+                <button
+                  key={goal.id}
+                  type="button"
+                  disabled={done}
+                  onClick={() => openAdd(goal.id)}
+                  aria-label={done ? `${goal.name} is fully funded` : `Save money toward ${goal.name}`}
+                  className="group flex w-full items-center gap-3 rounded-xl px-2.5 py-3 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 disabled:cursor-default disabled:hover:bg-transparent"
+                >
                   <span
                     className={cn(
                       "flex size-9 shrink-0 items-center justify-center rounded-lg border",
@@ -272,42 +279,43 @@ export function OverviewPage() {
                   >
                     <Icon className="size-4" strokeWidth={1.9} />
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <p className="truncate text-[12.5px] font-medium">{goal.name}</p>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-baseline justify-between gap-2">
+                      <span className="truncate text-[12.5px] font-medium">{goal.name}</span>
                       <span className="num shrink-0 text-[10.5px] text-muted-foreground">
                         {formatDate(goal.deadline, "short")}
                       </span>
-                    </div>
-                    <div className="mt-1 flex items-center gap-2">
-                      <ProgressBar
-                        value={pct}
-                        tone={done ? "ok" : "accent"}
-                        className="h-1"
-                        label={`${goal.name} progress`}
-                      />
+                    </span>
+                    <span className="mt-1 flex items-center gap-2">
+                      <span
+                        role="progressbar"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={Math.round(Math.min(100, pct))}
+                        aria-label={`${goal.name} progress`}
+                        className="h-1 flex-1 overflow-hidden rounded-full bg-muted"
+                      >
+                        <span
+                          className={cn("block h-full rounded-full", done ? "bar-fill-ok" : "bg-primary")}
+                          style={{ width: `${Math.min(100, pct)}%` }}
+                        />
+                      </span>
                       <span className="num shrink-0 text-[9.5px] text-muted-foreground">
                         {formatCompactMoney(goal.saved)} / {formatCompactMoney(goal.target).replace("RWF ", "")}
                       </span>
-                    </div>
-                  </div>
+                    </span>
+                  </span>
                   {done ? (
                     <span className="shrink-0 rounded-full bg-emerald-500/10 px-2 py-1 text-[10px] font-medium text-emerald-700 dark:text-emerald-300">
                       Funded
                     </span>
                   ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openAdd(goal.id)}
-                      className="h-7 shrink-0 gap-1 rounded-lg px-2 text-[10.5px]"
-                      aria-label={`Add money to ${goal.name}`}
-                    >
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border/80 bg-card px-2 py-1.5 text-[10.5px] font-medium text-primary shadow-soft transition-colors group-hover:border-primary/25 group-hover:bg-primary/[0.04]">
                       <Plus className="size-3" />
-                      Add
-                    </Button>
+                      Save
+                    </span>
                   )}
-                </div>
+                </button>
               )
             })}
           </div>
@@ -315,7 +323,7 @@ export function OverviewPage() {
 
         <Panel
           title="Recent activity"
-          description="Money moving into your vault."
+          description="Money moving into your savings."
           action={<SectionLabel>Latest</SectionLabel>}
           bodyClassName="p-2 sm:p-2.5"
         >
@@ -345,7 +353,7 @@ export function OverviewPage() {
             <div className="px-3 py-8 text-center">
               <p className="text-[13px] font-medium">No savings yet</p>
               <p className="mt-1 text-[11.5px] text-muted-foreground">
-                Add money once and it will show up here.
+                Save once and it will show up here.
               </p>
             </div>
           ) : null}
