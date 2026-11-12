@@ -185,7 +185,7 @@ export function VaultPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-9 gap-1 rounded-lg px-3 text-[11px] text-primary hover:border-primary/25 hover:bg-primary/[0.04] hover:text-primary"
+                          className="h-10 gap-1 rounded-lg px-3 text-[11px] sm:h-9 text-primary hover:border-primary/25 hover:bg-primary/[0.04] hover:text-primary"
                           onClick={() => openGoal(goal.id)}
                           disabled={done}
                         >
