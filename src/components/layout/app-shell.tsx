@@ -29,7 +29,7 @@ export function AppShell() {
         </main>
         <footer className="mx-auto w-full max-w-[1160px] px-4 pb-8 sm:px-6 lg:px-10">
           <div className="flex flex-col gap-2 border-t border-border/60 pt-4 text-[11px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <p>Saving 404 — built for circles, side hustles and quiet financial progress.</p>
+            <p>Saving 404 — steady saving, without the noise.</p>
             <p className="num">Kigali · RWF</p>
           </div>
         </footer>

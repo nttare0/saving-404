@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { ThemeProvider } from "@/components/theme-provider"
 import { WorkspaceProvider } from "@/store/workspace"
 import { AppShell } from "@/components/layout/app-shell"
@@ -11,6 +11,7 @@ import { BudgetPage } from "@/pages/budget"
 import { VaultPage } from "@/pages/vault"
 import { SettingsPage } from "@/pages/settings"
 import { NotFoundPage } from "@/pages/not-found"
+import { GROUP_SAVING_ENABLED } from "@/lib/features"
 
 export function AppRoutes() {
   return (
@@ -19,9 +20,19 @@ export function AppRoutes() {
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<OverviewPage />} />
-          <Route path="circles" element={<CirclesPage />} />
-          <Route path="circles/:circleId" element={<CircleDetailPage />} />
-          <Route path="loans" element={<LoansPage />} />
+          {GROUP_SAVING_ENABLED ? (
+            <>
+              <Route path="circles" element={<CirclesPage />} />
+              <Route path="circles/:circleId" element={<CircleDetailPage />} />
+              <Route path="loans" element={<LoansPage />} />
+            </>
+          ) : (
+            <>
+              <Route path="circles" element={<Navigate to="/" replace />} />
+              <Route path="circles/:circleId" element={<Navigate to="/" replace />} />
+              <Route path="loans" element={<Navigate to="/" replace />} />
+            </>
+          )}
           <Route path="budget" element={<BudgetPage />} />
           <Route path="vault" element={<VaultPage />} />
           <Route path="settings" element={<SettingsPage />} />

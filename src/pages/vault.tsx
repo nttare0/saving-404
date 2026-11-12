@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch"
 import { SavingsAreaChart } from "@/components/charts/savings-area"
 import { GoalDialog } from "@/components/dialogs/goal-dialog"
 import { useWorkspace } from "@/store/workspace"
-import { savingsTrend } from "@/lib/analytics"
+import { monthToDateSavings, personalTrend } from "@/lib/analytics"
 import { daysBetween, formatDate, formatMoney } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
@@ -45,7 +45,8 @@ export function VaultPage() {
   const remaining = Math.max(0, targetTotal - personal)
   const overall = (personal / Math.max(1, targetTotal)) * 100
   const completed = workspace.goals.filter((goal) => goal.saved >= goal.target).length
-  const trend = useMemo(() => savingsTrend(personal), [personal])
+  const thisMonth = monthToDateSavings(workspace)
+  const trend = useMemo(() => personalTrend(personal, thisMonth), [personal, thisMonth])
   const monthly = workspace.vault.autoSave ? workspace.vault.monthlyAmount : 0
   const monthsToFinish = monthly > 0 ? Math.ceil(remaining / monthly) : 0
   const projection = new Date()
@@ -67,11 +68,11 @@ export function VaultPage() {
       <PageHeader
         eyebrow="Save individually"
         title="Personal vault"
-        description="Your own money, kept separate from circle funds. Set goals, watch the balance grow, and keep a steady auto-save rhythm."
+        description="Your own money, kept separate from everyday spending. Set goals, watch the balance grow, and keep a steady auto-save rhythm."
         actions={
           <Button className="h-9 gap-1.5 rounded-lg" onClick={() => openGoal()}>
             <Plus className="size-4" />
-            Add to vault
+            Add money
           </Button>
         }
       />
@@ -208,7 +209,7 @@ export function VaultPage() {
           >
             <SavingsAreaChart data={trend} seriesLabel="Vault balance" />
             <p className="mt-2 px-2 text-[10.5px] leading-relaxed text-muted-foreground">
-              Circle contributions are tracked separately, so you always know what is truly yours to spend.
+              Everything here is yours. No shared pots, no payouts to track.
             </p>
           </Panel>
 
@@ -248,7 +249,7 @@ export function VaultPage() {
                 </div>
                 <Button
                   variant="outline"
-                  className="h-10 rounded-lg"
+                  className="h-11 rounded-lg"
                   onClick={saveMonthly}
                   disabled={
                     !workspace.vault.autoSave ||
@@ -296,8 +297,7 @@ export function VaultPage() {
       <div className="flex items-start gap-2.5 rounded-xl border border-border/70 bg-card/60 px-3.5 py-3 text-[11.5px] leading-relaxed text-muted-foreground">
         <Target className="mt-0.5 size-4 shrink-0 text-primary" />
         <p>
-          Personal savings stay yours. Circle money is shared, loaned and paid out on a rotation — the vault is never
-          included in a circle pot.
+          Everything in this vault belongs to you. It is never pooled, lent or paid out to anyone else.
         </p>
       </div>
 

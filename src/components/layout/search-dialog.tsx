@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ArrowRight, Search, UsersRound } from "lucide-react"
+import { ArrowRight, Search, Target } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,7 @@ import {
 import { cn } from "@/lib/utils"
 import { allNav } from "@/components/layout/nav-config"
 import { useWorkspace } from "@/store/workspace"
+import { formatMoney } from "@/lib/format"
 
 export function SearchDialog({
   open,
@@ -53,18 +54,18 @@ export function SearchDialog({
         icon: item.icon,
         kind: "page" as const,
       }))
-    const circles = workspace.circles
-      .filter((circle) => !term || circle.name.toLowerCase().includes(term) || circle.purpose.toLowerCase().includes(term))
-      .map((circle) => ({
-        id: circle.id,
-        label: circle.name,
-        detail: `${circle.memberIds.length} members · ${circle.meeting}`,
-        to: `/circles/${circle.id}`,
-        icon: UsersRound,
-        kind: "circle" as const,
+    const goals = workspace.goals
+      .filter((goal) => !term || goal.name.toLowerCase().includes(term))
+      .map((goal) => ({
+        id: goal.id,
+        label: goal.name,
+        detail: `${Math.round((goal.saved / Math.max(1, goal.target)) * 100)}% funded · ${formatMoney(Math.max(0, goal.target - goal.saved))} to go`,
+        to: "/vault",
+        icon: Target,
+        kind: "goal" as const,
       }))
-    return [...pages, ...circles]
-  }, [query, workspace.circles])
+    return [...pages, ...goals]
+  }, [query, workspace.goals])
 
   function select(to: string) {
     navigate(to)
@@ -76,7 +77,7 @@ export function SearchDialog({
       <DialogContent className="top-[16%] max-w-[520px] translate-y-0 gap-0 overflow-hidden rounded-2xl border-border/80 p-0">
         <DialogTitle className="sr-only">Search Saving 404</DialogTitle>
         <DialogDescription className="sr-only">
-          Jump to a page or savings circle.
+          Jump to a page or savings goal.
         </DialogDescription>
         <div className="flex items-center gap-2.5 border-b border-border/70 px-4">
           <Search className="size-4 shrink-0 text-muted-foreground" />
@@ -100,7 +101,7 @@ export function SearchDialog({
                 select(results[active].to)
               }
             }}
-            placeholder="Search pages, circles, people…"
+            placeholder="Search pages and goals…"
             aria-label="Search"
             className="h-14 w-full bg-transparent text-[14px] outline-none placeholder:text-muted-foreground"
             autoFocus
@@ -141,7 +142,7 @@ export function SearchDialog({
             <div className="px-3 py-10 text-center">
               <p className="text-[13px] font-medium">No results for “{query}”</p>
               <p className="mt-1 text-[11.5px] text-muted-foreground">
-                Try a circle name, or a page like Budget.
+                Try a goal name, or a page like Budget.
               </p>
             </div>
           )}

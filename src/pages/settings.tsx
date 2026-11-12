@@ -20,6 +20,12 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useTheme } from "@/components/theme-provider"
 import { useWorkspace } from "@/store/workspace"
+import {
+  loadNotificationPrefs,
+  notificationOptions,
+  saveNotificationPrefs,
+  type NotificationPrefs,
+} from "@/lib/notification-prefs"
 import { cn } from "@/lib/utils"
 
 const themeOptions = [
@@ -55,26 +61,6 @@ const themeOptions = [
   },
 ]
 
-const NOTIFICATIONS_KEY = "saving-404:notifications:v1"
-
-const notificationOptions = [
-  { id: "contributions", label: "Contribution reminders", description: "Two days before each circle's contribution date.", default: true },
-  { id: "repayments", label: "Loan repayment alerts", description: "When a loan is due, or the day after it is overdue.", default: true },
-  { id: "arrears", label: "Arrears nudges", description: "A weekly list of members who are behind.", default: true },
-  { id: "digest", label: "Monthly money digest", description: "A short summary of savings, lending and spending.", default: false },
-]
-
-function loadNotifications() {
-  const defaults = Object.fromEntries(notificationOptions.map((option) => [option.id, option.default]))
-  try {
-    const stored = window.localStorage.getItem(NOTIFICATIONS_KEY)
-    if (!stored) return defaults
-    return { ...defaults, ...(JSON.parse(stored) as Record<string, boolean>) }
-  } catch {
-    return defaults
-  }
-}
-
 export function SettingsPage() {
   const { workspace, updateProfile, resetWorkspace } = useWorkspace()
   const { theme, resolvedTheme, setTheme } = useTheme()
@@ -82,15 +68,7 @@ export function SettingsPage() {
   const [email, setEmail] = useState(workspace.profile.email)
   const [phone, setPhone] = useState(workspace.profile.phone)
   const [confirmReset, setConfirmReset] = useState(false)
-  const [notifications, setNotifications] = useState<Record<string, boolean>>(loadNotifications)
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(notifications))
-    } catch {
-      // Ignore unavailable storage; settings still apply for this session.
-    }
-  }, [notifications])
+  const [notifications, setNotifications] = useState<NotificationPrefs>(loadNotificationPrefs)
 
   useEffect(() => {
     setName(workspace.profile.name)
@@ -130,8 +108,12 @@ export function SettingsPage() {
     toast.success("Demo data restored", { description: "Your workspace is back to its starting point." })
   }
 
-  function toggleNotification(id: string, checked: boolean) {
-    setNotifications((current) => ({ ...current, [id]: checked }))
+  function toggleNotification(id: (typeof notificationOptions)[number]["id"], checked: boolean) {
+    setNotifications((current) => {
+      const next = { ...current, [id]: checked }
+      saveNotificationPrefs(next)
+      return next
+    })
     toast.success(checked ? "Reminder turned on" : "Reminder turned off")
   }
 
@@ -147,7 +129,7 @@ export function SettingsPage() {
         <div className="space-y-4">
           <Panel
             title="Profile"
-            description="How you appear across circles and loans."
+            description="How you appear across your savings workspace."
             action={
               <span className="flex items-center gap-1.5 text-[10.5px] text-muted-foreground">
                 <ShieldCheck className="size-3.5" /> Local only
@@ -160,7 +142,7 @@ export function SettingsPage() {
                 <div className="min-w-0">
                   <p className="truncate text-[13px] font-medium">{name || "Your name"}</p>
                   <p className="truncate text-[11px] text-muted-foreground">
-                    {workspace.profile.role} · {workspace.circles.length} circles
+                    {workspace.profile.role} · {workspace.goals.length} savings goals
                   </p>
                 </div>
               </div>
@@ -189,7 +171,7 @@ export function SettingsPage() {
 
               <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-3">
                 <p className="text-[10.5px] leading-relaxed text-muted-foreground">
-                  Your name appears on contributions and loan records.
+                  Your name appears on your vault and budget summaries.
                 </p>
                 <Button type="submit" size="sm" className="h-8 rounded-lg" disabled={!dirty || name.trim().length < 2}>
                   Save profile
@@ -278,8 +260,8 @@ export function SettingsPage() {
                 <div>
                   <p className="text-[11.5px] font-medium">Saved records</p>
                   <p className="num mt-0.5 text-[10.5px] text-muted-foreground">
-                    {workspace.circles.length} circles · {workspace.contributions.length} contributions ·{" "}
-                    {workspace.loans.length} loans
+                    {workspace.goals.length} goals · {workspace.budget.categories.length} budget categories ·{" "}
+                    {workspace.vaultLog.length} vault entries
                   </p>
                 </div>
               </div>
@@ -312,11 +294,11 @@ export function SettingsPage() {
           <div className="rounded-2xl border border-border/70 bg-card/60 p-4">
             <p className="text-[11px] font-medium">About this workspace</p>
             <p className="mt-1 text-[10.5px] leading-relaxed text-muted-foreground">
-              Saving 404 brings savings circles, member arrears, simple-interest loans, personal goals and flexible
-              budgets into one private workspace. Built with shadcn/ui and Bklit charts.
+              Saving 404 brings personal savings goals and flexible budgets into one private workspace. Built with
+              shadcn/ui and Bklit charts.
             </p>
             <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2.5 text-[10px] text-muted-foreground">
-              <span>Version 0.1 · demo</span>
+              <span>Version 0.2 · demo</span>
               <span>Kigali, Rwanda</span>
             </div>
           </div>

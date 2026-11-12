@@ -21,7 +21,7 @@ export function Logo({ compact = false, className }: { compact?: boolean; classN
         <span className="flex flex-col leading-none">
           <span className="text-[14.5px] font-semibold tracking-[-0.02em] text-foreground">Saving 404</span>
           <span className="mt-1 text-[9px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            Money, together
+            Money, on purpose
           </span>
         </span>
       ) : null}

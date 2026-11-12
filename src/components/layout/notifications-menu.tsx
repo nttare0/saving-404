@@ -1,6 +1,6 @@
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
-import { AlertTriangle, Bell, ChevronRight, HandCoins, WalletCards } from "lucide-react"
+import { Bell, ChevronRight, PiggyBank, Target, WalletCards } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -8,44 +8,45 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useWorkspace } from "@/store/workspace"
-import { loanRows, usageTone, workspaceTotals, budgetTotals } from "@/lib/analytics"
+import { usageTone, budgetTotals } from "@/lib/analytics"
 import { formatMoney } from "@/lib/format"
+import {
+  NOTIFICATIONS_EVENT,
+  loadNotificationPrefs,
+  type NotificationPrefs,
+} from "@/lib/notification-prefs"
 
 export function NotificationsMenu() {
   const { workspace } = useWorkspace()
+  const [prefs, setPrefs] = useState<NotificationPrefs>(loadNotificationPrefs)
+
+  useEffect(() => {
+    function sync() {
+      setPrefs(loadNotificationPrefs())
+    }
+    window.addEventListener("storage", sync)
+    window.addEventListener(NOTIFICATIONS_EVENT, sync)
+    return () => {
+      window.removeEventListener("storage", sync)
+      window.removeEventListener(NOTIFICATIONS_EVENT, sync)
+    }
+  }, [])
+
   const alerts = useMemo(() => {
-    const loans = loanRows(workspace.loans).filter((loan) => loan.status === "overdue")
-    const totals = workspaceTotals(workspace)
     const budgets = budgetTotals(workspace.budget.categories, workspace.budget.monthlyIncome)
     const capAlerts = workspace.budget.categories.filter(
       (category) => usageTone((category.spent / Math.max(1, category.cap)) * 100) !== "ok",
     )
+    const nearlyFunded = workspace.goals
+      .map((goal) => ({ goal, pct: (goal.saved / Math.max(1, goal.target)) * 100 }))
+      .filter(({ pct }) => pct >= 90 && pct < 100)
+      .sort((a, b) => b.pct - a.pct)
     const items = []
-    if (loans.length) {
-      items.push({
-        id: "loans",
-        icon: HandCoins,
-        title: `${loans.length} overdue loan${loans.length > 1 ? "s" : ""}`,
-        detail: `${formatMoney(loans.reduce((sum, loan) => sum + loan.outstanding, 0))} still to return`,
-        href: "/loans",
-        tone: "danger" as const,
-      })
-    }
-    if (totals.arrears > 0) {
-      items.push({
-        id: "arrears",
-        icon: AlertTriangle,
-        title: "Circle arrears need a nudge",
-        detail: `${formatMoney(totals.arrears)} across ${totals.membersLate} members`,
-        href: "/circles",
-        tone: "warning" as const,
-      })
-    }
-    if (capAlerts.length) {
+    if (prefs.budget && capAlerts.length) {
       items.push({
         id: "budget",
         icon: WalletCards,
-        title: `${capAlerts.length} categories near their cap`,
+        title: `${capAlerts.length} ${capAlerts.length === 1 ? "category is" : "categories are"} near the cap`,
         detail:
           budgets.overspent > 0
             ? `${formatMoney(budgets.overspent)} over budget in total`
@@ -54,8 +55,28 @@ export function NotificationsMenu() {
         tone: "warning" as const,
       })
     }
+    for (const { goal, pct } of (prefs.milestones ? nearlyFunded : [])) {
+      items.push({
+        id: `goal-${goal.id}`,
+        icon: Target,
+        title: `${goal.name} is ${Math.round(pct)}% funded`,
+        detail: `${formatMoney(goal.target - goal.saved)} to go`,
+        href: "/vault",
+        tone: "warning" as const,
+      })
+    }
+    if (prefs.savings && !workspace.vault.autoSave) {
+      items.push({
+        id: "auto-save",
+        icon: PiggyBank,
+        title: "Auto-save is paused",
+        detail: "Turn it on to keep your vault growing",
+        href: "/vault",
+        tone: "warning" as const,
+      })
+    }
     return items
-  }, [workspace])
+  }, [prefs, workspace])
 
   return (
     <DropdownMenu>
@@ -74,7 +95,7 @@ export function NotificationsMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[320px] max-w-[calc(100vw-1rem)] rounded-xl p-0">
         <div className="flex items-center justify-between border-b border-border/60 px-3.5 py-2.5">
-          <p className="text-[13px] font-semibold">Needs attention</p>
+          <p className="text-[13px] font-semibold">Worth a look</p>
           <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
             {alerts.length}
           </span>
@@ -87,13 +108,7 @@ export function NotificationsMenu() {
                 to={alert.href}
                 className="flex items-start gap-2.5 rounded-lg px-2.5 py-2.5 transition-colors hover:bg-muted/70 focus-visible:bg-muted/70 focus-visible:outline-none"
               >
-                <span
-                  className={`mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg ${
-                    alert.tone === "danger"
-                      ? "bg-rose-500/10 text-rose-600 dark:text-rose-300"
-                      : "bg-amber-500/10 text-amber-700 dark:text-amber-300"
-                  }`}
-                >
+                <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-700 dark:text-amber-300">
                   <alert.icon className="size-3.5" />
                 </span>
                 <span className="min-w-0 flex-1">
@@ -107,7 +122,7 @@ export function NotificationsMenu() {
             ))
           ) : (
             <p className="px-3 py-6 text-center text-[12px] text-muted-foreground">
-              Everything is on track.
+              You are all clear. Nothing needs a decision today.
             </p>
           )}
         </div>

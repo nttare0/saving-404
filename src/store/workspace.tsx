@@ -16,12 +16,13 @@ import {
   type Loan,
   type Member,
   type RolloverMode,
+  type VaultEntry,
   type Workspace,
   loanTotalDue,
   seedWorkspace,
 } from "@/lib/data"
 
-const STORAGE_KEY = "saving-404:workspace:v1"
+const STORAGE_KEY = "saving-404:workspace:v2"
 
 type NewContribution = {
   circleId: string
@@ -83,7 +84,11 @@ function loadWorkspace(): Workspace {
     if (!stored) return seedWorkspace
     const parsed = JSON.parse(stored) as Workspace
     if (!parsed?.circles || !parsed?.budget) return seedWorkspace
-    return { ...parsed, vault: parsed.vault ?? seedWorkspace.vault }
+    return {
+      ...parsed,
+      vault: parsed.vault ?? seedWorkspace.vault,
+      vaultLog: parsed.vaultLog ?? seedWorkspace.vaultLog,
+    }
   } catch {
     return seedWorkspace
   }
@@ -291,14 +296,27 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const addToGoal = useCallback((goalId: string, amount: number) => {
-    setWorkspace((current) => ({
-      ...current,
-      goals: current.goals.map((goal) =>
-        goal.id === goalId
-          ? { ...goal, saved: Math.min(goal.target, goal.saved + Math.max(0, Math.round(amount))) }
-          : goal,
-      ),
-    }))
+    setWorkspace((current) => {
+      const goal = current.goals.find((item) => item.id === goalId)
+      if (!goal) return current
+      const rounded = Math.max(0, Math.round(amount))
+      const applied = Math.min(rounded, Math.max(0, goal.target - goal.saved))
+      if (applied <= 0) return current
+      const entry: VaultEntry = {
+        id: makeId("vx"),
+        goalId,
+        amount: applied,
+        date: new Date().toISOString(),
+        source: "top-up",
+      }
+      return {
+        ...current,
+        goals: current.goals.map((item) =>
+          item.id === goalId ? { ...item, saved: item.saved + applied } : item,
+        ),
+        vaultLog: [entry, ...current.vaultLog],
+      }
+    })
   }, [])
 
   const updateProfile = useCallback((patch: Partial<Workspace["profile"]>) => {

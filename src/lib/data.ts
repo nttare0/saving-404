@@ -98,6 +98,14 @@ export type VaultSettings = {
   roundUp: boolean
 }
 
+export type VaultEntry = {
+  id: string
+  goalId: string
+  amount: number
+  date: string
+  source: "top-up" | "auto-save" | "round-up"
+}
+
 export type Workspace = {
   profile: {
     name: string
@@ -114,6 +122,7 @@ export type Workspace = {
   budget: BudgetState
   goals: Goal[]
   vault: VaultSettings
+  vaultLog: VaultEntry[]
 }
 
 export const TODAY = new Date()
@@ -419,8 +428,7 @@ const budget: BudgetState = {
     { id: "shopping", name: "Shopping", bucket: "wants", cap: 160_000, spent: 139_000, icon: "shirt" },
     { id: "entertainment", name: "Entertainment", bucket: "wants", cap: 100_000, spent: 41_000, icon: "sparkles" },
     { id: "misc", name: "Data & misc", bucket: "wants", cap: 150_000, spent: 96_000, icon: "smartphone" },
-    { id: "circle-saving", name: "Circle contributions", bucket: "savings", cap: 200_000, spent: 200_000, icon: "users" },
-    { id: "personal-saving", name: "Personal vault", bucket: "savings", cap: 80_000, spent: 80_000, icon: "vault" },
+    { id: "vault-saving", name: "Vault deposits", bucket: "savings", cap: 280_000, spent: 280_000, icon: "vault" },
     { id: "emergency", name: "Emergency fund", bucket: "savings", cap: 50_000, spent: 30_000, icon: "shield" },
   ],
 }
@@ -431,13 +439,22 @@ const goals: Goal[] = [
   { id: "trip", name: "Nairobi trip", target: 800_000, saved: 180_000, deadline: iso(addMonths(TODAY, 9)), icon: "plane" },
 ]
 
+const vaultLog: VaultEntry[] = [
+  { id: "vx-01", goalId: "emergency", amount: 100_000, date: iso(addDays(TODAY, -1)), source: "top-up" },
+  { id: "vx-02", goalId: "trip", amount: 50_000, date: iso(addDays(TODAY, -3)), source: "round-up" },
+  { id: "vx-03", goalId: "emergency", amount: 150_000, date: iso(addDays(TODAY, -10)), source: "auto-save" },
+  { id: "vx-04", goalId: "laptop", amount: 40_000, date: iso(addDays(TODAY, -14)), source: "top-up" },
+  { id: "vx-05", goalId: "emergency", amount: 75_000, date: iso(addDays(TODAY, -23)), source: "top-up" },
+  { id: "vx-06", goalId: "trip", amount: 25_000, date: iso(addDays(TODAY, -28)), source: "round-up" },
+]
+
 export const seedWorkspace: Workspace = {
   profile: {
     name: "Amara Nkusi",
     firstName: "Amara",
     email: "amara@example.rw",
     phone: "+250 788 120 404",
-    role: "Workspace owner",
+    role: "Personal saver",
   },
   members,
   circles,
@@ -451,6 +468,7 @@ export const seedWorkspace: Workspace = {
     monthlyAmount: 150_000,
     roundUp: true,
   },
+  vaultLog,
 }
 
 export function loanInterest(loan: Pick<Loan, "principal" | "ratePct" | "termMonths">) {

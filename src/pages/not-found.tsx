@@ -13,7 +13,7 @@ export function NotFoundPage() {
       </p>
       <h1 className="mt-1 text-[24px] font-semibold tracking-[-0.03em]">This page wandered off</h1>
       <p className="mt-2 max-w-[360px] text-[12.5px] leading-relaxed text-muted-foreground">
-        The page you were looking for does not exist. Your savings, circles and budget are still right where you left
+        The page you were looking for does not exist. Your savings, goals and budget are still right where you left
         them.
       </p>
       <Button asChild variant="outline" className="mt-5 h-9 gap-1.5 rounded-lg">

@@ -5,7 +5,7 @@ import { Logo } from "@/components/layout/logo"
 import { ThemeToggle } from "@/components/layout/theme-toggle"
 import { NotificationsMenu } from "@/components/layout/notifications-menu"
 import { SearchDialog } from "@/components/layout/search-dialog"
-import { ContributionDialog } from "@/components/dialogs/contribution-dialog"
+import { GoalDialog } from "@/components/dialogs/goal-dialog"
 import { Button } from "@/components/ui/button"
 import { useWorkspace } from "@/store/workspace"
 import { useTheme } from "@/components/theme-provider"
@@ -17,12 +17,8 @@ export function Topbar() {
   const { resolvedTheme } = useTheme()
   const location = useLocation()
   const [searchOpen, setSearchOpen] = useState(false)
-  const [contributionOpen, setContributionOpen] = useState(false)
+  const [addMoneyOpen, setAddMoneyOpen] = useState(false)
 
-  const circleId = location.pathname.startsWith("/circles/")
-    ? location.pathname.split("/")[2]
-    : null
-  const activeCircle = workspace.circles.find((circle) => circle.id === circleId)
   const activeNav = allNav.find(
     (item) => (item.end ? location.pathname === item.to : location.pathname.startsWith(item.to) && item.to !== "/"),
   )
@@ -35,10 +31,10 @@ export function Topbar() {
         </div>
 
         <div className="hidden min-w-0 items-center gap-1.5 text-[12.5px] lg:flex">
-          <span className="text-muted-foreground">Workspace</span>
+          <span className="text-muted-foreground">Saving</span>
           <ChevronRight className="size-3.5 text-muted-foreground/50" />
           <span className="truncate font-medium text-foreground">
-            {activeCircle ? activeCircle.name : activeNav?.label ?? "Overview"}
+            {location.pathname === "/" ? "Overview" : activeNav?.label ?? "Page not found"}
           </span>
         </div>
 
@@ -68,7 +64,7 @@ export function Topbar() {
           <NotificationsMenu />
 
           <Button
-            onClick={() => setContributionOpen(true)}
+            onClick={() => setAddMoneyOpen(true)}
             className="ml-0.5 h-9 rounded-lg px-2.5 shadow-[0_6px_18px_-12px_var(--primary)] sm:px-3.5"
             aria-label="Add money"
           >
@@ -87,7 +83,7 @@ export function Topbar() {
       </div>
 
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
-      <ContributionDialog open={contributionOpen} onOpenChange={setContributionOpen} />
+      <GoalDialog open={addMoneyOpen} onOpenChange={setAddMoneyOpen} />
       <span className="sr-only" data-theme={resolvedTheme} />
     </header>
   )

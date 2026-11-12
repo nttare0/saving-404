@@ -172,6 +172,22 @@ export function savingsTrend(total: number) {
   })
 }
 
+export function personalTrend(current: number, thisMonth: number) {
+  const months = 12
+  const now = new Date()
+  const previous = Math.max(0, current - thisMonth)
+  return Array.from({ length: months }, (_, index) => {
+    const date = new Date(now.getFullYear(), now.getMonth() - (months - 1 - index), 1)
+    const saved =
+      index === months - 1
+        ? current
+        : index === months - 2
+          ? previous
+          : Math.round(previous * (0.6 + 0.4 * (index / (months - 2))))
+    return { date, saved }
+  })
+}
+
 export function monthlyContributionSeries(workspace: Workspace) {
   const now = new Date()
   return Array.from({ length: 6 }, (_, index) => {
@@ -263,4 +279,42 @@ export function recentActivity(workspace: Workspace, limit = 6): ActivityItem[] 
 export function nextCycleLabel(circle: Circle) {
   if (circle.cadence === "weekly") return "Next Sunday"
   return "5th of next month"
+}
+
+export function vaultSummary(workspace: Workspace) {
+  const saved = workspace.goals.reduce((total, goal) => total + goal.saved, 0)
+  const target = workspace.goals.reduce((total, goal) => total + goal.target, 0)
+  const remaining = Math.max(0, target - saved)
+  const completed = workspace.goals.filter((goal) => goal.saved >= goal.target).length
+  return {
+    saved,
+    target,
+    remaining,
+    completed,
+    progress: target > 0 ? (saved / target) * 100 : 100,
+  }
+}
+
+export function monthToDateSavings(workspace: Workspace) {
+  const now = new Date()
+  return workspace.vaultLog
+    .filter((entry) => {
+      const date = new Date(entry.date)
+      return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth()
+    })
+    .reduce((total, entry) => total + entry.amount, 0)
+}
+
+export function vaultActivity(workspace: Workspace, limit = 6) {
+  return [...workspace.vaultLog]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, limit)
+    .map((entry) => {
+      const goal = workspace.goals.find((item) => item.id === entry.goalId)
+      return {
+        ...entry,
+        goalName: goal?.name ?? "Personal savings",
+        reference: entry.source === "auto-save" ? "Auto-save" : entry.source === "round-up" ? "Round-up" : "Top-up",
+      }
+    })
 }

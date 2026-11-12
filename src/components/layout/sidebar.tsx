@@ -3,7 +3,7 @@ import { ArrowUpRight, CircleHelp } from "lucide-react"
 import { Logo } from "@/components/layout/logo"
 import { primaryNav, secondaryNav } from "@/components/layout/nav-config"
 import { useWorkspace } from "@/store/workspace"
-import { budgetTotals, loanRows, workspaceTotals } from "@/lib/analytics"
+import { budgetTotals, vaultSummary } from "@/lib/analytics"
 import { formatDate, formatMoney, formatPercent } from "@/lib/format"
 import { ProgressBar } from "@/components/common/progress-bar"
 import { MemberAvatar } from "@/components/common/member-avatar"
@@ -21,9 +21,8 @@ function navClass({ isActive }: { isActive: boolean }) {
 
 export function Sidebar() {
   const { workspace } = useWorkspace()
-  const totals = workspaceTotals(workspace)
+  const vault = vaultSummary(workspace)
   const budget = budgetTotals(workspace.budget.categories, workspace.budget.monthlyIncome)
-  const overdueLoans = loanRows(workspace.loans).filter((loan) => loan.status === "overdue").length
   const spentPct = (budget.spent / Math.max(1, workspace.budget.monthlyIncome)) * 100
 
   return (
@@ -34,7 +33,7 @@ export function Sidebar() {
 
       <nav aria-label="Primary" className="flex-1 overflow-y-auto px-3">
         <p className="px-2.5 pb-1.5 pt-2 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground/80">
-          Workspace
+          Your money
         </p>
         <div className="space-y-0.5">
           {primaryNav.map((item) => (
@@ -46,16 +45,6 @@ export function Sidebar() {
                     strokeWidth={1.8}
                   />
                   <span>{item.label}</span>
-                  {item.label === "Circles" ? (
-                    <span className="ml-auto rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                      {workspace.circles.length}
-                    </span>
-                  ) : null}
-                  {item.label === "Loans" && overdueLoans > 0 ? (
-                    <span className="ml-auto rounded-md bg-rose-500/10 px-1.5 py-0.5 text-[10px] font-medium text-rose-600 dark:text-rose-300">
-                      {overdueLoans}
-                    </span>
-                  ) : null}
                   {isActive ? (
                     <span className="absolute -left-3 top-1/2 h-4 w-[2px] -translate-y-1/2 rounded-r-full bg-primary" />
                   ) : null}
@@ -126,12 +115,12 @@ export function Sidebar() {
           <span className="min-w-0 flex-1">
             <span className="block truncate text-[12.5px] font-medium">{workspace.profile.name}</span>
             <span className="block truncate text-[10.5px] text-muted-foreground">
-              {workspace.profile.role} · {workspace.circles.length} circles
+              {workspace.profile.role}
             </span>
           </span>
         </NavLink>
         <p className="px-2 pt-2 text-[9.5px] uppercase tracking-[0.14em] text-muted-foreground/60">
-          Saved {formatMoney(totals.totalSaved)} together
+          {formatMoney(vault.saved)} in your vault
         </p>
       </div>
     </aside>
